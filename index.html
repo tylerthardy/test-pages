@@ -1,0 +1,430 @@
+<html>
+<head>
+<style>
+body {
+    margin:0 0 0 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#holder{
+	position: relative;
+    /* Firefox */
+    /*height: -moz-calc(100% - 65px);*/
+    /* WebKit */
+    /*height: -webkit-calc(100% - 65px);*/
+    /* Opera */
+    /*height: -o-calc(100% - 65px);*/
+    /* Standard */
+    /*height: calc(100% - 65px);*/
+    height:100%;
+}
+#frame{
+	width:100%;
+	height:100%;
+}
+#chat{
+    width: 310px;
+    height: auto;
+    position: fixed;
+    padding-left: 0 !important;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+#stream{
+    /* Firefox */
+    width: -moz-calc(100% - 310px);
+    /* WebKit */
+    width: -webkit-calc(100% - 310px);
+    /* Opera */
+    width: -o-calc(100% - 310px);
+    /* Standard */
+    width: calc(100% - 310px);
+    height: auto;
+    position: fixed;
+    padding-right: 0 !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+#canvas {
+	/*background-color: rgba(0,255,0,0.5);*/
+}
+
+a.button {
+    color: black;
+    width: 100%;
+    height: 40px;
+    background-color: white;
+    display: block;
+    cursor: pointer;
+
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer */
+    -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+    -webkit-user-select: none; /* Chrome, Safari, and Opera */
+    -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+}
+a.button.on {
+    background-color:green;
+}
+
+a.button#showhidechat {
+    background-color: #566876;
+    position:absolute;
+    bottom:50%;
+    color:white;
+    text-align:center;
+    font-family:sans-serif;
+    font-size:12px;
+    line-height:40px;
+}
+
+#twitchlogin {
+    background-color: #4C3D51;
+    background-repeat: no-repeat;
+    background-image: url(images/twitch.png);
+    background-position: 5px 5px;
+    background-size: 30px 30px;
+    overflow: hidden;
+
+    height: 55px;
+    font-size:10px;
+    text-align:center;
+    color:white;
+    position:relative;
+}
+#twitchlogin span {
+    position:absolute;
+    bottom:5px;
+    left:4px;
+    font-family:sans-serif;
+}
+
+a.button#showhidecanvas {
+    background-image: url(images/paintbrush.png);
+    background-position: 5px 5px;
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+    background-color: #333;/*#566876;*/
+    overflow: hidden;
+}
+a.button#showhidecanvas.on {
+    background-position: 5px 5px;
+    background-color: #64AED1;
+    height: 240px;
+}
+a.button#showhidecanvas div.sh_child {
+    margin: 5px;
+    height: 30px;
+    color: black;
+    background-color: #FFFFFF;
+    background-repeat: no-repeat;
+}
+#submitDrawing {
+    background-image: url(images/upload.png);
+    background-position: 1px 2px;
+    background-size: 28px 26px;
+}
+#clearDrawing {
+    background-image: url(images/trash-can.png);
+    background-position: 2px 3px;
+    background-size: 25px 25px;
+}
+#selectColor button {
+    width:100%;
+    height:100%;
+    border: 1px solid #FFF;
+    font-size:10px;
+    padding: 0 0 0 0;
+    color: rgb(255,255,255);
+    background-color: rgb(0,0,0);
+    cursor: pointer;
+}
+#chosen-value {
+    display:block;
+    height:10px;
+    width: 25px;
+    font-size:8px;
+    margin-left:5px;
+    margin-right:5px;
+}
+#undoDrawing {
+    background-image: url(images/back-arrow.png);
+    background-position: 2px 3px;
+    background-size: 25px 25px;
+    overflow: hidden;
+    font-size:10px;
+}
+#eyedropper {
+    /*background-image: url(back-arrow.png);
+    background-position: 2px 3px;
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
+    overflow: hidden;*/
+    font-size:10px;
+}
+#lineWidth {
+     font-size:10px;
+}
+#brushSim {
+    position:relative;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+
+    width:5px;
+    height:5px;
+    border-radius: 50%;
+
+    background-color:black;
+}
+
+
+
+
+#twitter {
+    background-image: url(https://g.twimg.com/Twitter_logo_blue.png);
+    background-color: #333;/*#566876;*/
+    background-repeat: no-repeat;
+    background-position: 6px 6px;
+    background-size: 28px 26px;
+    position: absolute;
+    bottom:0;
+}
+#twitter:hover {
+    background-color: #555;/*#566876;*/
+}
+
+#curse {
+    background-image: url(https://camo.githubusercontent.com/8995865588797a04e6903005df091e72f7e6d7c3/68747470733a2f2f736f61727465782e6e65742f6173736574732f696d672f73746166662f6272616e64732f63757273652e706e67);
+    background-color: #333;/*#566876;*/
+    background-repeat: no-repeat;
+    background-position: 8px 6px;
+    background-size: 22px 30px;
+    position: absolute;
+    bottom:40px;
+}
+#curse:hover {
+    background-color: #555;/*#566876;*/
+}
+
+#frame {
+    background-color: #D0D9DE;
+}
+
+#points {
+    color:white;
+    font-size:12px;
+    text-align:center;
+    margin-bottom:10px;
+}
+
+
+
+
+
+
+
+
+
+#centerDiv {
+    position: absolute;
+    display: inline-block;
+    width: 80%;
+    right: 0px;
+    bottom: 285px;
+    top: 0px;
+    background-color: #D0D9DE;
+}
+
+#centerImg {
+    display: block;
+    height: 100%;
+    margin: auto;
+}
+
+#schedulehead {
+    position: absolute;
+    display: inline-block;
+    width:80%;
+    height:35px;
+    bottom:250px;
+    right: 0px;
+    border-top: 1px solid #777;
+    font-size:22px;
+    background-color: #aaa;
+}
+#schedulehead #today {
+    display: inline-block;
+    text-align: center;
+
+    width: -moz-calc(50% - 12px); /* Firefox */
+    width: -webkit-calc(50% - 12px); /* WebKit */
+    width: -o-calc(50% - 12px); /* Opera */
+    width: calc(50% - 12px); /* Standard */
+    height:100%;
+
+    margin: 5px 5px 0 5px;
+    border-right: 1px solid #777;
+    border-left: 1px solid #999;
+    border-top: 1px solid #999;
+
+    background-color: #FFD485;
+}
+#schedulehead #tomorrow {
+    display: inline-block;
+    text-align: center;
+
+    width: -moz-calc(50% - 12px); /* Firefox */
+    width: -webkit-calc(50% - 12px); /* WebKit */
+    width: -o-calc(50% - 12px); /* Opera */
+    width: calc(50% - 12px); /* Standard */
+    height:100%;
+
+    margin: 5px 5px 0 5px;
+    border-right: 1px solid #777;
+    border-left: 1px solid #999;
+    border-top: 1px solid #999;
+
+    background-color: #D4B192;
+}
+
+#schedule {
+    font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    display: inline-block;
+    width:80%;
+    height:250px;
+    bottom:0px;
+    right: 0px;
+    border-top: 1px solid #aaa;
+    background-color: #aaa;
+}
+
+.aday {
+
+    height: 92px;
+    width: -moz-calc(20% - 12px); /* Firefox */
+    width: -webkit-calc(20% - 12px); /* WebKit */
+    width: -o-calc(20% - 12px); /* Opera */
+    width: calc(20% - 12px); /* Standard */
+
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 5px 5px 5px;
+    background-color: #ddd;
+    border-bottom: 1px solid #777;
+    border-right: 1px solid #777;
+    border-left: 1px solid #999;
+    border-top: 1px solid #999;
+
+    text-align:center;
+}
+
+.aday.on {
+    background-color: #D9F1FF;
+}
+
+.aday:nth-of-type(-n+2) {
+    height: 120px;
+
+    width: -moz-calc(50% - 12px); /* Firefox */
+    width: -webkit-calc(50% - 12px); /* WebKit */
+    width: -o-calc(50% - 12px); /* Opera */
+    width: calc(50% - 12px); /* Standard */
+
+    border-bottom: 1px solid #777;
+    border-right: 1px solid #777;
+    border-left: 1px solid #999;
+    border-top: none;
+}
+
+.aday .header {
+    background-color:white;
+    border-bottom: 1px solid #999;
+    font-size: 16px;
+}
+
+.aday .bottom {
+    display: table;
+    width: 100%;
+    height: -moz-calc(100% - 20px); /* Firefox */
+    height: -webkit-calc(100% - 20px); /* WebKit */
+    height: -o-calc(100% - 20px); /* Opera */
+    height: calc(100% - 20px); /* Standard */
+}
+
+.aday .details {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.aday .theme {
+    font-size: 20px;
+}
+
+.aday .description {
+    display: none;
+}
+
+.aday:nth-of-type(-n+2) .header {
+    font-size: 24px;
+}
+
+.aday:nth-of-type(-n+2) .bottom {
+    height: -moz-calc(100% - 30px); /* Firefox */
+    height: -webkit-calc(100% - 30px); /* WebKit */
+    height: -o-calc(100% - 30px); /* Opera */
+    height: calc(100% - 30px); /* Standard */
+}
+
+.aday:nth-of-type(-n+2) .theme {
+    font-size: 30px;
+}
+
+.aday:nth-of-type(-n+2) .description {
+    display: inline-block;
+}
+
+#twitab {
+    position: absolute;
+    display: inline-block;
+    background-color: #f2f2f2;
+
+    width:20%;
+    height:100%;
+
+    border: 1px black;
+    text-align: center;
+    padding-top: 100px;
+}
+
+#twitterfeed {
+    position:absolute;
+    display:inline-block;
+    width: 20%;
+    height:100%;
+    background-color:#f2f2f2;
+}
+
+#twitter-widget-0 {
+    height:100% !important;
+    width:100% !important;
+  }
+</style>
+</head>
+<body onresize="onResize()">
+    <section id="stream">
+      	<div id="holder">
+    		<div id="frame">
+          <iframe id="iframesrc" src="https://player.twitch.tv/?channel=Alkan" frameborder="0" scrolling="no" height="100%" width="100%"></iframe>
+    		</div>
+    	</div>
+    </section>
+    <section id="chat">
+        <iframe frameborder="0" scrolling="no" id="chat_embed" src="https://www.twitch.tv/embed/Alkan/chat" height="100%" width="100%"></iframe>
+    </section>
+  </body>
+</html>
